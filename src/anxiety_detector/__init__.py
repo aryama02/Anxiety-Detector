@@ -1,1 +1,1 @@
-"""Anxiety Detector wellness voice check-in."""
+"""Remi wellness voice check-in."""

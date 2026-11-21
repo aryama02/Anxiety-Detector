@@ -24,8 +24,8 @@ def chat_markdown(session: Session) -> str:
         f'<div class="chat-heading"><span>Live conversation</span><span>Turn {turn} of {MAX_TURNS}</span></div>'
     ]
     for speaker, text in session.chat_log:
-        role = "aria" if speaker == "Anxiety Detector" else "you"
-        badge = "ANXIETY DETECTOR" if role == "aria" else "YOU"
+        role = "remi" if speaker == "Remi" else "you"
+        badge = "REMI" if role == "remi" else "YOU"
         lines.append(
             f'<div class="chat-entry chat-{role}">'
             f'<span class="chat-badge">{badge}</span>'
@@ -39,7 +39,7 @@ def start_status_markdown(session: Session) -> str:
     return (
         f"### Check-in active - {p.name}\n"
         f"*Age:* {p.age}\n\n"
-        "Anxiety Detector will speak first. Your microphone starts after it finishes.\n"
+        "Remi will speak first. Your microphone starts after it finishes.\n"
     )
 
 

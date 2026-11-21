@@ -131,7 +131,7 @@ class AnxietyDetectorService:
                 {"role": "system", "content": system_prompt},
                 {"role": "assistant", "content": spoken},
             ),
-            chat_log=(("Anxiety Detector", spoken),),
+            chat_log=(("Remi", spoken),),
         )
         return TurnResult(session, spoken)
 
@@ -150,7 +150,7 @@ class AnxietyDetectorService:
         )
         full_reply = _run_step("Conversation model (Ollama)", self._chat.reply, list(messages))
         spoken = spoken_text(full_reply)
-        chat_log = session.chat_log + (("You", transcript), ("Anxiety Detector", spoken))
+        chat_log = session.chat_log + (("You", transcript), ("Remi", spoken))
 
         new_session = replace(
             session,

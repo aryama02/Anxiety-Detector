@@ -2,8 +2,8 @@
 
 Handlers return {component: value} dicts, so each one only names the components it
 changes. `next_action` tells the browser script what to do after every event:
-  "speak"       play Anxiety Detector's reply, then start recording
-  "speak_final" play Anxiety Detector's last reply, do not record again
+  "speak"       play Remi's reply, then start recording
+  "speak_final" play Remi's last reply, do not record again
   "listen"      start recording right away (e.g. after a too-short clip)
   "stop"        do nothing; the person reads a notice and presses record
 """
@@ -200,9 +200,9 @@ NEXT_ACTION_JS = """
     setTimeout(() => {
         const players = document.querySelectorAll('.aria-voice-player');
         const player = players.length ? players[players.length - 1] : null;
-        if (!player) { console.error('Anxiety Detector voice audio was not available.'); return; }
+        if (!player) { console.error('Remi voice audio was not available.'); return; }
         player.onended = action === 'speak' ? startRecording : null;
-        player.play().catch((error) => console.error('Anxiety Detector voice playback failed:', error));
+        player.play().catch((error) => console.error('Remi voice playback failed:', error));
     }, 250);
 }
 """
@@ -212,7 +212,7 @@ def build_demo(service: AnxietyDetectorService, synthesizer: VoiceSynthesizer) -
     # delete_cache: remove recorded answers Gradio stored on disk, hourly, after 1 hour.
     # analytics_enabled=False: no Gradio usage telemetry from a wellness app.
     with gr.Blocks(
-        title="Anxiety Detector",
+        title="Remi",
         delete_cache=(3600, 3600),
         analytics_enabled=False,
         fill_width=True,
@@ -285,7 +285,7 @@ def build_demo(service: AnxietyDetectorService, synthesizer: VoiceSynthesizer) -
                         with gr.Row(elem_classes=["consult-grid"]):
                             with gr.Column(scale=7, elem_classes=["conversation-column"]):
                                 gr.Markdown("## Conversation")
-                                voice_player = gr.HTML(label="Anxiety Detector's voice")
+                                voice_player = gr.HTML(label="Remi's voice")
                                 turn_notice = gr.Markdown(elem_classes=["notice"])
                                 mic_status = gr.HTML(
                                     '<div class="mic-status"><span class="breathing-dot"></span><strong>Hands-Free Mic Active</strong><span>Pause for 2 seconds when finished speaking</span></div>'
@@ -315,7 +315,7 @@ def build_demo(service: AnxietyDetectorService, synthesizer: VoiceSynthesizer) -
 
         # ---- helpers ---------------------------------------------------------
         def speak(text: str, final: bool):
-            """Return (player html, next action) for Anxiety Detector's reply."""
+            """Return (player html, next action) for Remi's reply."""
             try:
                 return voice_player_html(synthesizer.synthesize(text)), (
                     "speak_final" if final else "speak"

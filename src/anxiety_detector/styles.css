@@ -432,7 +432,7 @@ footer { display: none !important; }
 .chat-entry { display: grid; grid-template-columns: 46px 1fr; gap: 10px; align-items: start; margin-bottom: 14px; }
 .chat-entry p { margin: 0; color: #FFFFFF !important; font-size: 14px; line-height: 1.65; }
 .chat-badge { width: fit-content; border-radius: 999px; padding: 4px 8px; font-size: 9px; font-weight: 800; letter-spacing: .08em; }
-.chat-aria .chat-badge { background: var(--forest); color: #FFFFFF; }
+.chat-remi .chat-badge { background: var(--forest); color: #FFFFFF; }
 .chat-you .chat-badge { background: rgba(255, 255, 255, 0.18); color: #FFFFFF; }
 
 .clinical-dashboard { display: flex; flex-direction: column; gap: 12px; }
@@ -492,6 +492,16 @@ footer { display: none !important; }
 }
 #form-panel .notice {
   display: none !important;
+}
+.conversation-column .notice:empty,
+.conversation-column .notice:not(:has(h1,h2,h3,p,ul,ol)) {
+  display: none !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
 }
 
 .aria-page-panel, #about-page, #credits-page {
