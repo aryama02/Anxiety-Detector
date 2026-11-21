@@ -109,7 +109,7 @@ CREDITS_HTML = """
   <ul class="aria-model-list">
     <li><strong>Llama 3.2</strong> by Meta, run locally with Ollama. Built with Llama.</li>
     <li><strong>Whisper large-v3-turbo</strong> by OpenAI, served by Groq, for speech-to-text.</li>
-    <li><strong>Piper</strong> text-to-speech with the “lessac” English voice, from the Rhasspy project.</li>
+    <li><strong>Kokoro</strong> local neural text-to-speech, with Piper as a fallback voice.</li>
   </ul>
 </section>
 """

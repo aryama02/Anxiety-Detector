@@ -36,14 +36,17 @@ def main() -> int:
     if problem := chat_model.availability_problem():
         log.warning(problem)
     if missing := synthesizer.missing_files():
-        log.warning("Piper voice files missing: %s", ", ".join(map(str, missing)))
+        log.warning("Local voice files missing: %s", ", ".join(map(str, missing)))
     log.info("Voice analysis: %s", analyzer.source)
 
     service = AriaService(chat_model, Transcriber(api_key), analyzer)
     demo = build_demo(service, synthesizer)
+    server_port = config.available_port()
+    if server_port != config.PORT:
+        log.info("Port %s is busy; starting Aria on port %s", config.PORT, server_port)
     demo.launch(
         server_name=config.HOST,
-        server_port=config.PORT,
+        server_port=server_port,
         inbrowser=True,
         theme=THEME,
         css=CSS,

@@ -1,4 +1,4 @@
-"""Aria's spoken voice, generated locally with Piper."""
+"""Aria's spoken voice, generated locally with Kokoro and Piper fallback."""
 
 import base64
 import html
@@ -9,6 +9,9 @@ import wave
 import numpy as np
 
 from .config import (
+    KOKORO_MODEL,
+    KOKORO_VOICE,
+    KOKORO_VOICES,
     PIPER_CONFIG,
     PIPER_LENGTH_SCALE,
     PIPER_MODEL,
@@ -21,15 +24,26 @@ class VoiceUnavailableError(RuntimeError):
 
 
 class VoiceSynthesizer:
-    """Loads the Piper voice once and reuses it for every reply."""
+    """Loads Kokoro or Piper once and reuses the voice for every reply."""
 
-    def __init__(self, model_path=PIPER_MODEL, config_path=PIPER_CONFIG):
+    def __init__(
+        self,
+        model_path=PIPER_MODEL,
+        config_path=PIPER_CONFIG,
+        kokoro_model=KOKORO_MODEL,
+        kokoro_voices=KOKORO_VOICES,
+    ):
         self._model_path = model_path
         self._config_path = config_path
+        self._kokoro_model = kokoro_model
+        self._kokoro_voices = kokoro_voices
         self._voice = None
+        self._kokoro = None
         self._lock = threading.Lock()
 
     def missing_files(self) -> list:
+        if self._kokoro_model.exists() and self._kokoro_voices.exists():
+            return []
         return [p for p in (self._model_path, self._config_path) if not p.exists()]
 
     def _load(self):
@@ -38,10 +52,9 @@ class VoiceSynthesizer:
                 missing = self.missing_files()
                 if missing:
                     raise VoiceUnavailableError(
-                        "Piper voice files are missing: "
+                        "Kokoro and Piper voice files are missing: "
                         + ", ".join(str(p) for p in missing)
-                        + ". Download them from the en/en_US/lessac/medium folder "
-                        "of rhasspy/piper-voices on Hugging Face."
+                        + ". Add Kokoro model files or install the Piper lessac voice."
                     )
                 from piper import PiperVoice
 
@@ -49,7 +62,33 @@ class VoiceSynthesizer:
         return self._voice
 
     def synthesize(self, text: str) -> bytes:
-        """Return WAV bytes for the text, with a short pause between sentences."""
+        """Return WAV bytes using Kokoro, or fall back to Piper."""
+        if self._kokoro_model.exists() and self._kokoro_voices.exists():
+            with self._lock:
+                if self._kokoro is None:
+                    from kokoro_onnx import Kokoro
+
+                    self._kokoro = Kokoro(
+                        str(self._kokoro_model),
+                        str(self._kokoro_voices),
+                    )
+                samples, rate = self._kokoro.create(
+                    text,
+                    voice=KOKORO_VOICE,
+                    speed=0.92,
+                    lang="en-us",
+                    trim=True,
+                )
+            buffer = io.BytesIO()
+            with wave.open(buffer, "wb") as wav:
+                wav.setnchannels(1)
+                wav.setsampwidth(2)
+                wav.setframerate(rate)
+                wav.writeframes(
+                    np.asarray(samples * 32767, dtype=np.int16).tobytes()
+                )
+            return buffer.getvalue()
+
         from piper import SynthesisConfig
 
         voice = self._load()

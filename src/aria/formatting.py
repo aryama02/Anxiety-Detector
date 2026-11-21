@@ -29,7 +29,7 @@ def start_status_markdown(session: Session) -> str:
     p = session.profile
     return (
         f"### Check-in active - {p.name}\n"
-        f"*Age:* {p.age}  |  *Context:* {p.occupation}\n\n"
+        f"*Age:* {p.age}\n\n"
         "Aria will speak first. Your microphone starts after she finishes.\n"
     )
 
@@ -85,7 +85,7 @@ def results_markdown(session: Session) -> str:
     return f"""# Wellness screening results
 
 ## {p.name}
-**Age:** {p.age}  |  **Context:** {p.occupation}
+**Age:** {p.age}
 
 ## Overall conclusion
 - **Anxiety indicator:** **{gad7_severity(a.gad7)}**{gad_score}

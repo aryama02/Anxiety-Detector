@@ -4,7 +4,7 @@ Aria is a voice-based wellness screening prototype. It combines:
 
 - an Ollama-hosted `llama3.2` conversation model;
 - Groq `whisper-large-v3-turbo` speech transcription;
-- a local Piper neural voice;
+- Kokoro ONNX neural voice with a local Piper fallback;
 - DAIC-WOZ acoustic features for supplemental stress analysis.
 
 > This application is a screening experiment, not a medical diagnostic tool.
@@ -58,9 +58,20 @@ Copy [.env.example](.env.example) if needed. Do not commit `.env` or paste API k
 
 Groq is used only for microphone transcription. Ollama generates the conversation responses.
 
-### 4. Add the local Piper voice
+### 4. Add the local voice
 
-The app currently expects these files:
+Kokoro is the primary local voice. Install it and download both model files:
+
+```bash
+python -m pip install -U kokoro-onnx
+mkdir models\tts
+curl.exe -L "https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.1/kokoro-v1.0.onnx" -o "models\tts\kokoro-v1.0.onnx"
+curl.exe -L "https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.1/voices-v1.0.bin" -o "models\tts\voices-v1.0.bin"
+```
+
+Set `KOKORO_VOICE=af_heart` in `.env` to change the default voice. Piper remains an automatic fallback if Kokoro files are missing.
+
+Piper fallback files:
 
 ```text
 models/voices/en_US-lessac-medium.onnx
@@ -110,7 +121,8 @@ src/
     ui.py           Gradio layout, styling, and event handlers
 tests/              Unit tests
 models/
-  voices/           Local Piper voice model
+  tts/              Kokoro model and voices
+  voices/           Local Piper fallback voice model
 data/               Private source data, not committed
 ```
 

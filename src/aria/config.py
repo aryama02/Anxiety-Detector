@@ -1,6 +1,7 @@
 """Paths, settings, and tunable thresholds for the whole app, kept in one place."""
 
 import os
+import socket
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -18,10 +19,24 @@ VOICE_MODEL_PATHS = (
 )
 PIPER_MODEL = MODELS_DIR / "voices" / "en_US-lessac-medium.onnx"
 PIPER_CONFIG = MODELS_DIR / "voices" / "en_US-lessac-medium.onnx.json"
+KOKORO_MODEL = MODELS_DIR / "tts" / "kokoro-v1.0.onnx"
+KOKORO_VOICES = MODELS_DIR / "tts" / "voices-v1.0.bin"
+KOKORO_VOICE = os.getenv("KOKORO_VOICE", "af_heart").strip()
 
 # --- Server ------------------------------------------------------------------
 HOST = "127.0.0.1"
 PORT = int(os.getenv("PORT", "7863"))
+
+
+def available_port(preferred_port=PORT):
+    """Use the preferred port when free, otherwise try the next 19 local ports."""
+    for port in range(preferred_port, preferred_port + 20):
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as probe:
+            if probe.connect_ex(("127.0.0.1", port)) != 0:
+                return port
+    raise RuntimeError(
+        f"No available port found in the range {preferred_port}-{preferred_port + 19}"
+    )
 
 # --- Conversation model (local Ollama) ---------------------------------------
 OLLAMA_BASE_URL = "http://localhost:11434/v1"

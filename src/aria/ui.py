@@ -198,14 +198,6 @@ def build_demo(service: AriaService, synthesizer: VoiceSynthesizer) -> gr.Blocks
                             with gr.Row():
                                 name_input = gr.Textbox(label="First name", placeholder="e.g., Aryan")
                                 age_input = gr.Number(label="Age", value=20, precision=0)
-                            occupation_input = gr.Textbox(
-                                label="Work or school", placeholder="e.g., Computer Science student"
-                            )
-                            reason_input = gr.Textbox(
-                                label="What has been on your mind lately?",
-                                placeholder="Share a few words about your current stress or mood.",
-                                lines=3,
-                            )
                             intake_notice = gr.Markdown(elem_classes=["notice"])
                             start_btn = gr.Button(
                                 "Start voice check-in", variant="primary", elem_classes=["primary-button"]
@@ -251,9 +243,9 @@ def build_demo(service: AriaService, synthesizer: VoiceSynthesizer) -> gr.Blocks
                 return voice_error_html(str(exc)), "stop"
 
         # ---- handlers --------------------------------------------------------
-        def on_start(name, age, occupation, reason):
+        def on_start(name, age):
             try:
-                result = service.start(Profile.from_form(name, age, occupation, reason))
+                result = service.start(Profile.from_form(name, age, "", ""))
             except Exception as exc:
                 log.exception("Could not start the check-in")
                 return {
@@ -340,7 +332,7 @@ def build_demo(service: AriaService, synthesizer: VoiceSynthesizer) -> gr.Blocks
 
         start_btn.click(
             on_start,
-            inputs=[name_input, age_input, occupation_input, reason_input],
+            inputs=[name_input, age_input],
             outputs=[intake_notice, intake_screen, consult_screen, *conversation_outputs],
         ).then(None, inputs=[next_action], js=NEXT_ACTION_JS)
 
