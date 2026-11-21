@@ -6,10 +6,10 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from aria.acoustics import VoiceMetrics  # noqa: E402
-from aria.config import MAX_TURNS, SAMPLE_RATE  # noqa: E402
-from aria.formatting import dashboard_markdown, results_markdown  # noqa: E402
-from aria.session import (  # noqa: E402
+from Front-End.acoustics import VoiceMetrics  # noqa: E402
+from Front-End.config import MAX_TURNS, SAMPLE_RATE  # noqa: E402
+from Front-End.formatting import dashboard_markdown, results_markdown  # noqa: E402
+from Front-End.session import (  # noqa: E402
     AnxietyDetectorService,
     ClipTooShortError,
     Profile,
