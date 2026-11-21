@@ -34,30 +34,21 @@ def _nav_item(page: str, label: str, active: bool = False) -> str:
 
 
 SIDEBAR_HTML = f"""
-<nav class="aria-sidebar" aria-label="Main">
-  <div class="aria-wordmark">Anxiety Detector</div>
+<nav class="aria-sidebar" aria-label="Primary navigation">
+  <button type="button" class="aria-wordmark" data-page="checkin" aria-label="Aria check-in">aria</button>
   <div class="aria-nav-group">
     {_nav_item("checkin", "Check-in", active=True)}
     {_nav_item("about", "About")}
-    {_nav_item("credits", "Credits")}
   </div>
+  <button type="button" class="aria-test-pill" data-page="checkin">Anxiety &amp; Wellness Test</button>
 </nav>
 """
 
-TOPBAR_HTML = f"""
-<div class="aria-header-actions" aria-hidden="true">
-  <span class="aria-round-btn">{icon("user", 18)}</span>
-  <span class="aria-round-btn">{icon("bell", 18)}</span>
-  <span class="aria-round-btn">{icon("settings", 18)}</span>
-</div>
+TOPBAR_HTML = """
+<div class="aria-header-actions" aria-hidden="true"></div>
 """
 
-CHECKIN_HEADER_HTML = """
-<header class="aria-header">
-  <h1 class="aria-title">Your private wellness check-in</h1>
-  <p class="aria-subtitle">Private voice check-in · GAD-7 &amp; PHQ-8 themes · Vocal wellness insights</p>
-</header>
-"""
+CHECKIN_HEADER_HTML = ""
 
 
 def _about_item(colour: str, icon_name: str, title: str, text: str) -> str:

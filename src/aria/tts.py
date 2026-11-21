@@ -116,7 +116,7 @@ def voice_player_html(wav_bytes: bytes) -> str:
     encoded = base64.b64encode(wav_bytes).decode("ascii")
     return f"""
     <div class="voice-card">
-        <div class="voice-status"><span class="live-dot"></span> Anxiety Detector is speaking</div>
+        <div class="voice-status"><span class="breathing-dot"></span><span>Aria is speaking...</span></div>
         <audio class="aria-voice-player" controls autoplay
                src="data:audio/wav;base64,{encoded}"></audio>
     </div>

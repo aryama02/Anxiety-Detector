@@ -10,7 +10,7 @@ import pandas as pd
 import warnings
 import xgboost as xgb
 
-from Front-End.features import extract_features
+from aria.features import extract_features
 
 from sklearn.impute import SimpleImputer
 from sklearn.metrics import roc_auc_score

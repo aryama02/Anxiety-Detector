@@ -9,6 +9,7 @@ changes. `next_action` tells the browser script what to do after every event:
 """
 
 import logging
+import base64
 from pathlib import Path
 
 import gradio as gr
@@ -16,7 +17,6 @@ import gradio as gr
 from . import formatting
 from .layout_html import (
     ABOUT_HTML,
-    CHECKIN_HEADER_HTML,
     CREDITS_HTML,
     SIDEBAR_HTML,
     TOPBAR_HTML,
@@ -114,7 +114,7 @@ HEAD = """
     // Sidebar pages: switching only toggles which page is shown (CSS reads data-page on #app-shell),
     // so a check-in in progress keeps its state while you read About or Credits.
     document.addEventListener("click", (event) => {
-      const item = event.target.closest(".aria-nav-item[data-page]");
+      const item = event.target.closest("[data-page]");
       if (!item) return;
       const shell = document.getElementById("app-shell");
       if (shell) shell.dataset.page = item.dataset.page;
@@ -134,6 +134,10 @@ HEAD = """
 # so check this still works after upgrading Gradio.
 NEXT_ACTION_JS = """
 (action) => {
+    setTimeout(() => {
+        const chat = document.querySelector('.chat-panel');
+        if (chat) chat.scrollTop = chat.scrollHeight;
+    }, 100);
     const startRecording = () => {
         setTimeout(() => {
             const mic = document.querySelector('#patient_mic');
@@ -171,11 +175,10 @@ def build_demo(service: AnxietyDetectorService, synthesizer: VoiceSynthesizer) -
         state = gr.State()
         next_action = gr.Textbox(visible="hidden")
 
-        with gr.Row(elem_id="app-shell"):
-            with gr.Column(elem_id="sidebar", scale=0, min_width=240):
-                gr.HTML(SIDEBAR_HTML)
+        with gr.Column(elem_id="app-shell"):
+            gr.HTML(SIDEBAR_HTML)
 
-            with gr.Column(elem_id="main", scale=1):
+            with gr.Column(elem_id="main"):
                 gr.HTML(TOPBAR_HTML)
 
                 # Pages are shown and hidden in the browser by the script in HEAD.
@@ -185,50 +188,94 @@ def build_demo(service: AnxietyDetectorService, synthesizer: VoiceSynthesizer) -
                     gr.HTML(CREDITS_HTML)
 
                 with gr.Column(elem_id="checkin-page"):
-                    gr.HTML(CHECKIN_HEADER_HTML)
-
                     with gr.Column(visible=True, elem_id="intake-screen") as intake_screen:
+                        hero_image = ""
+                        root = Path(__file__).resolve().parents[2]
+                        for candidate in (
+                            root / "hero_bg.jpg",
+                            root / "black-white-portrait-friends_23-2151565851 (1).jpg",
+                        ):
+                            if candidate.exists():
+                                hero_image = "data:image/jpeg;base64," + base64.b64encode(candidate.read_bytes()).decode("ascii")
+                                break
+                        hero_style = f' style="--hero-image: url(\'{hero_image}\')" ' if hero_image else ""
+                        gr.HTML(
+                            f"""
+<div class="aria-hero-copy"{hero_style}>
+  <div class="hero-copy">
+    <div class="drop-fade-stack">
+      <span>Take a slow breath.</span>
+      <span>Your voice carries your story.</span>
+      <span>A quiet space to check in with yourself.</span>
+      <span>Private. Empathetic. Grounded in clinical acoustics.</span>
+    </div>
+  </div>
+</div>""",
+                        elem_classes=["hero-shell"],
+                        )
                         with gr.Column(elem_id="form-panel", elem_classes=["intake-card"]):
-                            gr.Markdown("## Before we begin")
+                            gr.Markdown("## Begin your private check-in")
                             gr.Markdown(
-                                "A few details help Anxiety Detector personalize the conversation. "
-                                "This is a wellness screening, not a medical diagnosis.",
+                                "Enter a few details to personalize your voice session.",
                                 elem_classes=["form-helper"],
                             )
                             with gr.Row():
-                                name_input = gr.Textbox(label="First name", placeholder="e.g., Aryan")
+                                name_input = gr.Textbox(label="First Name", placeholder="First name")
                                 age_input = gr.Number(label="Age", value=20, precision=0)
+                            occupation_input = gr.Textbox(
+                                visible=False,
+                                value="",
+                                label="Occupation / Major",
+                            )
+                            reason_input = gr.Textbox(
+                                visible=False,
+                                value="",
+                                label="What's been on your mind lately?",
+                            )
                             intake_notice = gr.Markdown(elem_classes=["notice"])
                             start_btn = gr.Button(
-                                "Start voice check-in", variant="primary", elem_classes=["primary-button"]
+                                "Take the Anxiety & Wellness Test →",
+                                variant="primary",
+                                elem_classes=["primary-button"],
                             )
+                    with gr.Column(visible=False, elem_id="consult-screen") as consult_screen:
+                        progress_header = gr.HTML(
+                            '<div class="progress-header"><div class="progress-steps">'
+                            '<span class="progress-step active"><b>1</b>Rapport &amp; Baseline</span><i></i>'
+                            '<span class="progress-step"><b>2</b>Anxiety Check (GAD-7)</span><i></i>'
+                            '<span class="progress-step"><b>3</b>Mood &amp; Energy (PHQ-8)</span></div>'
+                            '<span class="turn-pill">Turn 0 of 8</span></div>',
+                            elem_classes=["progress-header-host"],
+                        )
+                        with gr.Row(elem_classes=["consult-grid"]):
+                            with gr.Column(scale=7, elem_classes=["conversation-column"]):
+                                gr.Markdown("## Conversation")
+                                voice_player = gr.HTML(label="Aria's voice")
+                                turn_notice = gr.Markdown(elem_classes=["notice"])
+                                mic_status = gr.HTML(
+                                    '<div class="mic-status"><span class="breathing-dot"></span><strong>Hands-Free Mic Active</strong><span>Pause for 2 seconds when finished speaking</span></div>'
+                                )
+                                mic_input = gr.Audio(
+                                    sources=["microphone", "upload"],
+                                    type="filepath",
+                                    label="Your response",
+                                    elem_id="patient_mic",
+                                )
+                                chat_display = gr.HTML(elem_classes=["chat-panel"], value="")
 
-                    with gr.Row(visible=False, elem_id="consult-screen") as consult_screen:
-                        with gr.Column(scale=7, elem_classes=["conversation-column"]):
-                            gr.Markdown("## Conversation")
-                            voice_player = gr.HTML(label="Anxiety Detector's voice")
-                            turn_notice = gr.Markdown(elem_classes=["notice"])
-                            mic_input = gr.Audio(
-                                sources=["microphone", "upload"],
-                                type="filepath",
-                                label="Your response",
-                                elem_id="patient_mic",
-                            )
-                            chat_display = gr.Markdown(elem_classes=["chat-panel"])
-
-                        with gr.Column(scale=5, elem_classes=["dashboard-column"]):
-                            gr.Markdown("## Wellness snapshot")
-                            dashboard = gr.Markdown(
-                                "Your live screening summary will appear here after the first response."
-                            )
-                            results_btn = gr.Button(
-                                "Review final results", variant="secondary", elem_classes=["secondary-button"]
-                            )
+                            with gr.Column(scale=5, elem_classes=["dashboard-column"]):
+                                gr.Markdown("## Wellness snapshot")
+                                dashboard = gr.HTML(
+                                    '<div class="dashboard-placeholder">Your live screening summary will appear after the first response.</div>'
+                                )
+                                results_btn = gr.Button(
+                                    "Review final results", variant="secondary", elem_classes=["secondary-button"]
+                                )
 
                     with gr.Column(visible=False, elem_classes=["results-card"]) as results_screen:
                         results_display = gr.Markdown()
                         back_btn = gr.Button(
-                            "Back to conversation", variant="secondary", elem_classes=["secondary-button"]
+                            "Reset / New Check-In", variant="secondary", elem_classes=["secondary-button"]
                         )
 
         # ---- helpers ---------------------------------------------------------
@@ -243,9 +290,9 @@ def build_demo(service: AnxietyDetectorService, synthesizer: VoiceSynthesizer) -
                 return voice_error_html(str(exc)), "stop"
 
         # ---- handlers --------------------------------------------------------
-        def on_start(name, age):
+        def on_start(name, age, occupation, reason):
             try:
-                result = service.start(Profile.from_form(name, age, "", ""))
+                result = service.start(Profile.from_form(name, age, occupation, reason))
             except Exception as exc:
                 log.exception("Could not start the check-in")
                 return {
@@ -262,7 +309,8 @@ def build_demo(service: AnxietyDetectorService, synthesizer: VoiceSynthesizer) -
                 voice_player: player,
                 turn_notice: "",
                 mic_input: None,
-                dashboard: formatting.start_status_markdown(result.session),
+                dashboard: formatting.dashboard_markdown(result.session),
+                progress_header: formatting.progress_markdown(result.session),
                 state: result.session,
                 next_action: action,
             }
@@ -307,6 +355,7 @@ def build_demo(service: AnxietyDetectorService, synthesizer: VoiceSynthesizer) -
                 turn_notice: "",
                 mic_input: None,
                 dashboard: formatting.dashboard_markdown(new_session),
+                progress_header: formatting.progress_markdown(new_session),
                 state: new_session,
                 next_action: action,
             }
@@ -327,12 +376,12 @@ def build_demo(service: AnxietyDetectorService, synthesizer: VoiceSynthesizer) -
 
         # ---- wiring ----------------------------------------------------------
         conversation_outputs = [
-            chat_display, voice_player, turn_notice, mic_input, dashboard, state, next_action,
+            chat_display, voice_player, turn_notice, mic_input, dashboard, progress_header, state, next_action,
         ]
 
         start_btn.click(
             on_start,
-            inputs=[name_input, age_input],
+            inputs=[name_input, age_input, occupation_input, reason_input],
             outputs=[intake_notice, intake_screen, consult_screen, *conversation_outputs],
         ).then(None, inputs=[next_action], js=NEXT_ACTION_JS)
 
@@ -347,8 +396,26 @@ def build_demo(service: AnxietyDetectorService, synthesizer: VoiceSynthesizer) -
             outputs=[turn_notice, consult_screen, results_screen, results_display],
         )
         back_btn.click(
-            lambda: {consult_screen: gr.update(visible=True), results_screen: gr.update(visible=False)},
-            outputs=[consult_screen, results_screen],
+            lambda: {
+                intake_screen: gr.update(visible=True),
+                consult_screen: gr.update(visible=False),
+                results_screen: gr.update(visible=False),
+                name_input: "",
+                age_input: 20,
+                occupation_input: "",
+                reason_input: "",
+                state: None,
+            },
+            outputs=[
+                intake_screen,
+                consult_screen,
+                results_screen,
+                name_input,
+                age_input,
+                occupation_input,
+                reason_input,
+                state,
+            ],
         )
 
     return demo

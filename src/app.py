@@ -3,13 +3,13 @@
 import logging
 import sys
 
-from Front-End import config
-from Front-End.acoustics import VoiceAnalyzer
-from Front-End.llm import ChatModel
-from Front-End.session import AnxietyDetectorService
-from Front-End.transcription import Transcriber
-from Front-End.tts import VoiceSynthesizer
-from Front-End.ui import CSS, HEAD, THEME, build_demo
+from aria import config
+from aria.acoustics import VoiceAnalyzer
+from aria.llm import ChatModel
+from aria.session import AnxietyDetectorService
+from aria.transcription import Transcriber
+from aria.tts import VoiceSynthesizer
+from aria.ui import CSS, HEAD, THEME, build_demo
 
 log = logging.getLogger("aria")
 
