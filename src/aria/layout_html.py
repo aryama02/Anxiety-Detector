@@ -45,6 +45,25 @@ SIDEBAR_HTML = f"""
 """
 
 TOPBAR_HTML = """
+<style>
+  html, body, gradio-app, .gradio-container, .main, .wrap.app, #app-shell {
+    background-image:
+      linear-gradient(rgba(14, 16, 15, 0.45), rgba(14, 16, 15, 0.65)),
+      url('https://images.pexels.com/photos/8911301/pexels-photo-8911301.jpeg') !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+  }
+  #intake-screen, .aria-hero-copy {
+    background-image:
+      linear-gradient(90deg, rgba(14, 16, 15, 0.55) 0%, rgba(14, 16, 15, 0.15) 50%, rgba(14, 16, 15, 0.55) 100%),
+      url('https://images.pexels.com/photos/8911301/pexels-photo-8911301.jpeg') !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+  }
+</style>
 <div class="aria-header-actions" aria-hidden="true"></div>
 """
 

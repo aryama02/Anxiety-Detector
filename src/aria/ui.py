@@ -35,23 +35,23 @@ from .tts import VoiceSynthesizer, voice_error_html, voice_player_html
 log = logging.getLogger(__name__)
 
 _LIGHT_THEME_VARS = {
-    "body_background_fill": "#F8F2E8",
-    "body_text_color": "#121212",
-    "body_text_color_subdued": "#6B645A",
-    "background_fill_primary": "#F8F2E8",
-    "background_fill_secondary": "#EFE7DB",
-    "border_color_primary": "transparent",
+    "body_background_fill": "#121312",
+    "body_text_color": "#FFFFFF",
+    "body_text_color_subdued": "rgba(255, 255, 255, 0.78)",
+    "background_fill_primary": "#121312",
+    "background_fill_secondary": "#1E201E",
+    "border_color_primary": "rgba(255, 255, 255, 0.18)",
     "block_background_fill": "transparent",
     "block_border_width": "0px",
     "block_shadow": "none",
     "block_radius": "24px",
     "block_padding": "0px",
     "block_label_background_fill": "transparent",
-    "block_label_text_color": "#121212",
+    "block_label_text_color": "#FFFFFF",
     "block_label_border_width": "0px",
     "block_label_shadow": "none",
     "block_title_background_fill": "transparent",
-    "block_title_text_color": "#121212",
+    "block_title_text_color": "#FFFFFF",
     "block_title_border_width": "0px",
     "block_title_padding": "0px",
     "block_title_radius": "0px",
@@ -61,21 +61,21 @@ _LIGHT_THEME_VARS = {
     "layout_gap": "20px",
     "panel_background_fill": "transparent",
     "panel_border_width": "0px",
-    "input_background_fill": "#FFFFFF",
-    "input_border_width": "0px",
+    "input_background_fill": "rgba(255, 255, 255, 0.10)",
+    "input_border_width": "1px",
     "input_shadow": "none",
-    "input_shadow_focus": "0 0 0 2px #F4B6D6",
-    "input_border_color_focus": "transparent",
-    "input_radius": "16px",
-    "input_placeholder_color": "#6B645A",
+    "input_shadow_focus": "0 0 0 2px rgba(255, 255, 255, 0.25)",
+    "input_border_color_focus": "rgba(255, 255, 255, 0.60)",
+    "input_radius": "14px",
+    "input_placeholder_color": "rgba(255, 255, 255, 0.50)",
     "container_radius": "24px",
-    "button_large_radius": "999px",
-    "button_medium_radius": "999px",
-    "button_primary_background_fill": "#141414",
-    "button_primary_background_fill_hover": "#2A2A2A",
+    "button_large_radius": "14px",
+    "button_medium_radius": "14px",
+    "button_primary_background_fill": "#2C4A3E",
+    "button_primary_background_fill_hover": "#3B6152",
     "button_primary_text_color": "#FFFFFF",
-    "button_primary_border_color": "transparent",
-    "button_primary_shadow": "none",
+    "button_primary_border_color": "rgba(255, 255, 255, 0.25)",
+    "button_primary_shadow": "0 4px 14px rgba(0, 0, 0, 0.35)",
     "button_transform_hover": "none",
 }
 
@@ -91,13 +91,58 @@ THEME = _THEME_BASE.set(
     },
 )
 
-CSS = (Path(__file__).parent / "styles.css").read_text(encoding="utf-8")
+def _load_hero_bg_uri() -> str:
+    root = Path(__file__).resolve().parents[2]
+    for candidate in (
+        root / "hero_bg.jpg",
+        root / "black-white-portrait-friends_23-2151565851 (1).jpg",
+        root / "black-white-portrait-friends_23-2151565851.avif",
+    ):
+        if candidate.exists():
+            mime = "image/jpeg"
+            if candidate.suffix.lower() == ".avif":
+                mime = "image/avif"
+            elif candidate.suffix.lower() == ".png":
+                mime = "image/png"
+            return f"data:{mime};base64," + base64.b64encode(candidate.read_bytes()).decode("ascii")
+    return ""
+
+HERO_BG_URL = "https://images.pexels.com/photos/8911301/pexels-photo-8911301.jpeg"
+HERO_BG_URI = _load_hero_bg_uri() or HERO_BG_URL
+_RAW_CSS = (Path(__file__).parent / "styles.css").read_text(encoding="utf-8")
+CSS = f":root {{ --hero-image: url('{HERO_BG_URL}'); --hero-bg-url: url('{HERO_BG_URL}'); }}\n" + _RAW_CSS
 
 # Browser-side helpers:
 #  * forces light mode (asks Gradio for its light theme and keeps its "dark" class off
 #    the page, so a dark OS setting can't switch component internals to dark styles);
 #  * switches between the Check-in, About, and Credits pages from the sidebar.
-HEAD = """
+HEAD_STYLE = f"""
+<style>
+  :root {{
+    --hero-image: url('{HERO_BG_URL}');
+    --hero-bg-url: url('{HERO_BG_URL}');
+  }}
+  html, body, gradio-app, .gradio-container, .main, .wrap.app, #app-shell {{
+    background-image:
+      linear-gradient(rgba(14, 16, 15, 0.55), rgba(14, 16, 15, 0.70)),
+      url('{HERO_BG_URL}') !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+  }}
+  #intake-screen, .aria-hero-copy {{
+    background-image:
+      linear-gradient(90deg, rgba(14, 16, 15, 0.60) 0%, rgba(14, 16, 15, 0.20) 50%, rgba(14, 16, 15, 0.60) 100%),
+      url('{HERO_BG_URL}') !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+  }}
+</style>
+"""
+
+HEAD = HEAD_STYLE + """
 <script>
   (function () {
     const url = new URL(window.location.href);
@@ -189,19 +234,9 @@ def build_demo(service: AnxietyDetectorService, synthesizer: VoiceSynthesizer) -
 
                 with gr.Column(elem_id="checkin-page"):
                     with gr.Column(visible=True, elem_id="intake-screen") as intake_screen:
-                        hero_image = ""
-                        root = Path(__file__).resolve().parents[2]
-                        for candidate in (
-                            root / "hero_bg.jpg",
-                            root / "black-white-portrait-friends_23-2151565851 (1).jpg",
-                        ):
-                            if candidate.exists():
-                                hero_image = "data:image/jpeg;base64," + base64.b64encode(candidate.read_bytes()).decode("ascii")
-                                break
-                        hero_style = f' style="--hero-image: url(\'{hero_image}\')" ' if hero_image else ""
                         gr.HTML(
                             f"""
-<div class="aria-hero-copy"{hero_style}>
+<div class="aria-hero-copy" style="background-image: linear-gradient(90deg, rgba(14, 16, 15, 0.60) 0%, rgba(14, 16, 15, 0.20) 50%, rgba(14, 16, 15, 0.60) 100%), url('{HERO_BG_URL}'); background-size: cover; background-position: center center;">
   <div class="hero-copy">
     <div class="drop-fade-stack">
       <span>Take a slow breath.</span>
@@ -211,7 +246,7 @@ def build_demo(service: AnxietyDetectorService, synthesizer: VoiceSynthesizer) -
     </div>
   </div>
 </div>""",
-                        elem_classes=["hero-shell"],
+                            elem_classes=["hero-shell"],
                         )
                         with gr.Column(elem_id="form-panel", elem_classes=["intake-card"]):
                             gr.Markdown("## Begin your private check-in")
