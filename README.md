@@ -23,8 +23,10 @@ The Gradio interface is implemented in [src/app.py](src/app.py). It includes:
 
 ### 1. Install Python dependencies
 
-```powershell
-cd D:\anxiety_hackathon
+```bash
+cd Anxiety-Detector
+python3 -m venv .venv
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
 python -m pip install -r requirements.txt
 ```
 
@@ -32,13 +34,13 @@ python -m pip install -r requirements.txt
 
 Install Ollama, then start it and verify the local model:
 
-```powershell
+```bash
 ollama serve
 ```
 
 If Ollama is already running, do not start it again. In another terminal:
 
-```powershell
+```bash
 ollama pull llama3.2
 ollama list
 ```
@@ -71,7 +73,7 @@ Piper runs locally and does not require a voice API key.
 
 ### 5. Start the app
 
-```powershell
+```bash
 python src/app.py
 ```
 
@@ -81,16 +83,35 @@ Open:
 http://127.0.0.1:7863
 ```
 
+### Run the tests
+
+```bash
+python -m unittest discover -s tests
+```
+
+The tests use fake models, so they need neither Ollama nor a Groq key.
+
 ## Project structure
 
 ```text
 src/
-  app.py          Gradio GUI and application flow
-  train_daic.py   DAIC-WOZ feature extraction and model training
+  app.py            Entry point: wires the services together and launches Gradio
+  train_daic.py     DAIC-WOZ model training
+  aria/
+    config.py       Paths, settings, and thresholds
+    features.py     Acoustic feature extraction (shared with training)
+    acoustics.py    Audio loading and vocal stress scoring
+    transcription.py  Groq Whisper speech-to-text
+    llm.py          Ollama conversation and score estimation
+    assessment.py   Reply cleanup, score parsing, severity bands
+    session.py      Session state and turn logic
+    formatting.py   Chat, dashboard, and results text
+    tts.py          Piper voice
+    ui.py           Gradio layout, styling, and event handlers
+tests/              Unit tests
 models/
-  voices/         Local Piper voice model
-data/             Private source data, not committed
-outputs/          Generated audio, not committed
+  voices/           Local Piper voice model
+data/               Private source data, not committed
 ```
 
 ## Screening limitations
