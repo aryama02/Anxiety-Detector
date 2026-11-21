@@ -1,4 +1,4 @@
-"""Aria's spoken voice, generated locally with Kokoro and Piper fallback."""
+"""Anxiety Detector's spoken voice, generated locally with Kokoro and Piper fallback."""
 
 import base64
 import html
@@ -116,7 +116,7 @@ def voice_player_html(wav_bytes: bytes) -> str:
     encoded = base64.b64encode(wav_bytes).decode("ascii")
     return f"""
     <div class="voice-card">
-        <div class="voice-status"><span class="live-dot"></span> Aria is speaking</div>
+        <div class="voice-status"><span class="live-dot"></span> Anxiety Detector is speaking</div>
         <audio class="aria-voice-player" controls autoplay
                src="data:audio/wav;base64,{encoded}"></audio>
     </div>
@@ -126,7 +126,7 @@ def voice_player_html(wav_bytes: bytes) -> str:
 def voice_error_html(message: str) -> str:
     return f"""
     <div class="voice-card voice-card-error">
-        <div class="voice-status">Aria's voice is unavailable</div>
+        <div class="voice-status">Anxiety Detector's voice is unavailable</div>
         <p>{html.escape(message)} Read the reply below, then press record to answer.</p>
     </div>
     """

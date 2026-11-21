@@ -1,6 +1,6 @@
-# Aria Wellness Voice Check-In
+# Anxiety Detector Wellness Voice Check-In
 
-Aria is a voice-based wellness screening prototype. It combines:
+Anxiety Detector is a voice-based wellness screening prototype. It combines:
 
 - an Ollama-hosted `llama3.2` conversation model;
 - Groq `whisper-large-v3-turbo` speech transcription;
@@ -8,6 +8,9 @@ Aria is a voice-based wellness screening prototype. It combines:
 - DAIC-WOZ acoustic features for supplemental stress analysis.
 
 > This application is a screening experiment, not a medical diagnostic tool.
+
+For the complete implementation, architecture, training, setup, safety, and file reference, see [PROJECT_DOCUMENTATION.md](PROJECT_DOCUMENTATION.md).
+For the model-training process and 336-sample dataset, see [TRAINING_DOCUMENTATION.md](TRAINING_DOCUMENTATION.md).
 
 ## Frontend
 
@@ -106,8 +109,8 @@ The tests use fake models, so they need neither Ollama nor a Groq key.
 
 ```text
 src/
-  app.py            Entry point: wires the services together and launches Gradio
-  train_daic.py     DAIC-WOZ model training
+  app.py            Single application entry point
+  train_daic.py     Single DAIC-WOZ training entry point
   aria/
     config.py       Paths, settings, and thresholds
     features.py     Acoustic feature extraction (shared with training)
@@ -117,7 +120,7 @@ src/
     assessment.py   Reply cleanup, score parsing, severity bands
     session.py      Session state and turn logic
     formatting.py   Chat, dashboard, and results text
-    tts.py          Piper voice
+    tts.py          Kokoro voice with Piper fallback
     ui.py           Gradio layout, styling, and event handlers
 tests/              Unit tests
 models/

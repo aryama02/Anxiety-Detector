@@ -1,7 +1,7 @@
-"""Aria's conversation model (llama3.2 served by a local Ollama) and its prompts.
+"""Anxiety Detector's conversation model (llama3.2 served by a local Ollama) and its prompts.
 
 The model is used in two ways each turn:
-  * reply()           - Aria's spoken answer (warm, temperature 0.7)
+  * reply()           - the spoken answer (warm, temperature 0.7)
   * estimate_scores() - a separate JSON-only call (temperature 0) that rates the
                         conversation so far. Asking for scores inside the spoken
                         reply proved unreliable with a 3B model.
@@ -13,7 +13,7 @@ from openai import OpenAI
 
 from .config import LLM_MODEL, LLM_TEMPERATURE, MAX_TURNS, OLLAMA_BASE_URL
 
-SYSTEM_PROMPT_TEMPLATE = """You are Aria, a warm, empathetic AI wellness intake companion having a natural voice conversation.
+SYSTEM_PROMPT_TEMPLATE = """You are the Anxiety Detector, a warm, empathetic AI wellness intake companion having a natural voice conversation.
 You are not a doctor or clinician.
 
 USER BACKGROUND:
@@ -65,7 +65,7 @@ def build_system_prompt(profile) -> str:
 
 def opening_request(profile) -> str:
     return (
-        f"Welcome {profile.name} warmly and introduce yourself as Aria. "
+        f"Welcome {profile.name} warmly and introduce yourself as Anxiety Detector. "
         "Ask one simple professional icebreaker: \"How are you doing today?\" "
         "Keep it to two short sentences."
     )
@@ -89,7 +89,7 @@ def turn_message(turn: int, transcript: str) -> str:
 
 def transcript_text(profile, chat_log) -> str:
     lines = [f"Background the person gave: {profile.reason}"]
-    lines += [f"{'Aria' if speaker == 'Aria' else 'Person'}: {text}" for speaker, text in chat_log]
+    lines += [f"{'Anxiety Detector' if speaker == 'Anxiety Detector' else 'Person'}: {text}" for speaker, text in chat_log]
     return "\n".join(lines)
 
 

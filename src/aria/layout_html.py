@@ -35,7 +35,7 @@ def _nav_item(page: str, label: str, active: bool = False) -> str:
 
 SIDEBAR_HTML = f"""
 <nav class="aria-sidebar" aria-label="Main">
-  <div class="aria-wordmark">aria</div>
+  <div class="aria-wordmark">Anxiety Detector</div>
   <div class="aria-nav-group">
     {_nav_item("checkin", "Check-in", active=True)}
     {_nav_item("about", "About")}
@@ -70,7 +70,7 @@ def _about_item(colour: str, icon_name: str, title: str, text: str) -> str:
 
 ABOUT_HTML = f"""
 <header class="aria-header">
-  <h1 class="aria-title">About Aria</h1>
+  <h1 class="aria-title">About Anxiety Detector</h1>
   <p class="aria-subtitle">How the check-in works and what it is for.</p>
 </header>
 <section class="aria-page-panel">
@@ -86,7 +86,7 @@ ABOUT_HTML = f"""
 CREDITS_HTML = """
 <header class="aria-header">
   <h1 class="aria-title">Credits</h1>
-  <p class="aria-subtitle">The data and open-source models Aria is built on.</p>
+  <p class="aria-subtitle">The data and open-source models Anxiety Detector is built on.</p>
 </header>
 <section class="aria-page-panel">
   <h2>Data</h2>

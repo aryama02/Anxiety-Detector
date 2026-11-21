@@ -1,4 +1,4 @@
-"""Start the Aria wellness voice check-in: `python src/app.py`."""
+"""Start the Anxiety Detector wellness voice check-in: `python src/app.py`."""
 
 import logging
 import sys
@@ -6,7 +6,7 @@ import sys
 from aria import config
 from aria.acoustics import VoiceAnalyzer
 from aria.llm import ChatModel
-from aria.session import AriaService
+from aria.session import AnxietyDetectorService
 from aria.transcription import Transcriber
 from aria.tts import VoiceSynthesizer
 from aria.ui import CSS, HEAD, THEME, build_demo
@@ -39,11 +39,11 @@ def main() -> int:
         log.warning("Local voice files missing: %s", ", ".join(map(str, missing)))
     log.info("Voice analysis: %s", analyzer.source)
 
-    service = AriaService(chat_model, Transcriber(api_key), analyzer)
+    service = AnxietyDetectorService(chat_model, Transcriber(api_key), analyzer)
     demo = build_demo(service, synthesizer)
     server_port = config.available_port()
     if server_port != config.PORT:
-        log.info("Port %s is busy; starting Aria on port %s", config.PORT, server_port)
+        log.info("Port %s is busy; starting Anxiety Detector on port %s", config.PORT, server_port)
     demo.launch(
         server_name=config.HOST,
         server_port=server_port,

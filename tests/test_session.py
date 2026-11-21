@@ -10,7 +10,7 @@ from aria.acoustics import VoiceMetrics  # noqa: E402
 from aria.config import MAX_TURNS, SAMPLE_RATE  # noqa: E402
 from aria.formatting import dashboard_markdown, results_markdown  # noqa: E402
 from aria.session import (  # noqa: E402
-    AriaService,
+    AnxietyDetectorService,
     ClipTooShortError,
     Profile,
     SessionCompleteError,
@@ -56,7 +56,7 @@ class FakeAnalyzer:
 class SessionFlowTests(unittest.TestCase):
     def setUp(self):
         self.chat, self.stt = FakeChat(), FakeTranscriber()
-        self.service = AriaService(self.chat, self.stt, FakeAnalyzer())
+        self.service = AnxietyDetectorService(self.chat, self.stt, FakeAnalyzer())
         self.session = self.service.start(Profile.from_form("Mai", 21, "student", "exams")).session
 
     def test_profile_defaults_for_blank_form(self):

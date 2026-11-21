@@ -20,7 +20,7 @@ def chat_markdown(session: Session) -> str:
     turn = min(session.turns_answered + 1, MAX_TURNS)
     lines = [f"### Live conversation - Turn {turn} of {MAX_TURNS}", "---"]
     for speaker, text in session.chat_log:
-        lines.append(f"**Aria:** {text}" if speaker == "Aria" else f"**You:** *{text}*")
+        lines.append(f"**Anxiety Detector:** {text}" if speaker == "Anxiety Detector" else f"**You:** *{text}*")
         lines.append("")
     return "\n".join(lines)
 
@@ -30,7 +30,7 @@ def start_status_markdown(session: Session) -> str:
     return (
         f"### Check-in active - {p.name}\n"
         f"*Age:* {p.age}\n\n"
-        "Aria will speak first. Your microphone starts after she finishes.\n"
+        "Anxiety Detector will speak first. Your microphone starts after it finishes.\n"
     )
 
 

@@ -106,7 +106,7 @@ class TurnResult:
     spoken_reply: str
 
 
-class AriaService:
+class AnxietyDetectorService:
     """Runs a check-in: analysis, transcription, conversation. Speech output is the UI's job."""
 
     def __init__(self, chat_model, transcriber, analyzer: VoiceAnalyzer):
@@ -131,7 +131,7 @@ class AriaService:
                 {"role": "system", "content": system_prompt},
                 {"role": "assistant", "content": spoken},
             ),
-            chat_log=(("Aria", spoken),),
+            chat_log=(("Anxiety Detector", spoken),),
         )
         return TurnResult(session, spoken)
 
@@ -150,7 +150,7 @@ class AriaService:
         )
         full_reply = _run_step("Conversation model (Ollama)", self._chat.reply, list(messages))
         spoken = spoken_text(full_reply)
-        chat_log = session.chat_log + (("You", transcript), ("Aria", spoken))
+        chat_log = session.chat_log + (("You", transcript), ("Anxiety Detector", spoken))
 
         new_session = replace(
             session,
