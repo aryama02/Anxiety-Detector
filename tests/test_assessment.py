@@ -4,7 +4,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from aria.assessment import (  # noqa: E402
+from anxiety_detector.assessment import (  # noqa: E402
     Assessment,
     assessment_from_scores,
     contains_distress_language,

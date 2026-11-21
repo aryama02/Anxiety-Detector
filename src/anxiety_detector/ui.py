@@ -124,7 +124,7 @@ HEAD_STYLE = f"""
   }}
   html, body, gradio-app, .gradio-container, .main, .wrap.app, #app-shell {{
     background-image:
-      linear-gradient(rgba(14, 16, 15, 0.55), rgba(14, 16, 15, 0.70)),
+      linear-gradient(rgba(14, 16, 15, 0.05), rgba(14, 16, 15, 0.12)),
       url('{HERO_BG_URL}') !important;
     background-size: cover !important;
     background-position: center center !important;
@@ -133,7 +133,7 @@ HEAD_STYLE = f"""
   }}
   #intake-screen, .aria-hero-copy {{
     background-image:
-      linear-gradient(90deg, rgba(14, 16, 15, 0.60) 0%, rgba(14, 16, 15, 0.20) 50%, rgba(14, 16, 15, 0.60) 100%),
+      linear-gradient(90deg, rgba(14, 16, 15, 0.08) 0%, rgba(14, 16, 15, 0.02) 50%, rgba(14, 16, 15, 0.08) 100%),
       url('{HERO_BG_URL}') !important;
     background-size: cover !important;
     background-position: center center !important;
@@ -236,7 +236,7 @@ def build_demo(service: AnxietyDetectorService, synthesizer: VoiceSynthesizer) -
                     with gr.Column(visible=True, elem_id="intake-screen") as intake_screen:
                         gr.HTML(
                             f"""
-<div class="aria-hero-copy" style="background-image: linear-gradient(90deg, rgba(14, 16, 15, 0.60) 0%, rgba(14, 16, 15, 0.20) 50%, rgba(14, 16, 15, 0.60) 100%), url('{HERO_BG_URL}'); background-size: cover; background-position: center center;">
+<div class="aria-hero-copy" style="background-image: linear-gradient(90deg, rgba(14, 16, 15, 0.08) 0%, rgba(14, 16, 15, 0.02) 50%, rgba(14, 16, 15, 0.08) 100%), url('{HERO_BG_URL}'); background-size: cover; background-position: center center;">
   <div class="hero-copy">
     <div class="drop-fade-stack">
       <span>Take a slow breath.</span>
@@ -285,7 +285,7 @@ def build_demo(service: AnxietyDetectorService, synthesizer: VoiceSynthesizer) -
                         with gr.Row(elem_classes=["consult-grid"]):
                             with gr.Column(scale=7, elem_classes=["conversation-column"]):
                                 gr.Markdown("## Conversation")
-                                voice_player = gr.HTML(label="Aria's voice")
+                                voice_player = gr.HTML(label="Anxiety Detector's voice")
                                 turn_notice = gr.Markdown(elem_classes=["notice"])
                                 mic_status = gr.HTML(
                                     '<div class="mic-status"><span class="breathing-dot"></span><strong>Hands-Free Mic Active</strong><span>Pause for 2 seconds when finished speaking</span></div>'

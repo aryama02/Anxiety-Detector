@@ -25,7 +25,7 @@ def chat_markdown(session: Session) -> str:
     ]
     for speaker, text in session.chat_log:
         role = "aria" if speaker == "Anxiety Detector" else "you"
-        badge = "ARIA" if role == "aria" else "YOU"
+        badge = "ANXIETY DETECTOR" if role == "aria" else "YOU"
         lines.append(
             f'<div class="chat-entry chat-{role}">'
             f'<span class="chat-badge">{badge}</span>'

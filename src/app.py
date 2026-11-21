@@ -3,15 +3,15 @@
 import logging
 import sys
 
-from aria import config
-from aria.acoustics import VoiceAnalyzer
-from aria.llm import ChatModel
-from aria.session import AnxietyDetectorService
-from aria.transcription import Transcriber
-from aria.tts import VoiceSynthesizer
-from aria.ui import CSS, HEAD, THEME, build_demo
+from anxiety_detector import config
+from anxiety_detector.acoustics import VoiceAnalyzer
+from anxiety_detector.llm import ChatModel
+from anxiety_detector.session import AnxietyDetectorService
+from anxiety_detector.transcription import Transcriber
+from anxiety_detector.tts import VoiceSynthesizer
+from anxiety_detector.ui import CSS, HEAD, THEME, build_demo
 
-log = logging.getLogger("aria")
+log = logging.getLogger("anxiety_detector")
 
 
 def main() -> int:

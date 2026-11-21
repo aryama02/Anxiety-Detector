@@ -6,10 +6,10 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from aria.acoustics import VoiceMetrics  # noqa: E402
-from aria.config import MAX_TURNS, SAMPLE_RATE  # noqa: E402
-from aria.formatting import dashboard_markdown, results_markdown  # noqa: E402
-from aria.session import (  # noqa: E402
+from anxiety_detector.acoustics import VoiceMetrics  # noqa: E402
+from anxiety_detector.config import MAX_TURNS, SAMPLE_RATE  # noqa: E402
+from anxiety_detector.formatting import dashboard_markdown, results_markdown  # noqa: E402
+from anxiety_detector.session import (  # noqa: E402
     AnxietyDetectorService,
     ClipTooShortError,
     Profile,
@@ -98,7 +98,7 @@ class SessionFlowTests(unittest.TestCase):
     def test_failed_scoring_still_counts_the_turn_and_keeps_old_scores(self):
         first = self.service.take_turn(self.session, ONE_SECOND).session
         self.chat.fail_scoring = True
-        with self.assertLogs("aria.session", level="ERROR"):
+        with self.assertLogs("anxiety_detector.session", level="ERROR"):
             second = self.service.take_turn(first, ONE_SECOND).session
         self.assertEqual(second.turns_answered, 2)
         self.assertEqual(second.assessment.gad7, 6)

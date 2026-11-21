@@ -18,7 +18,7 @@ python -m unittest tests.test_session.SessionFlowTests.test_short_clip_is_reject
 python src/train_daic.py                  # optional: trains models/saved_voice_model.pkl from DAIC-WOZ
 ```
 
-Run scripts from the repo root as `python src/<file>.py`. Running a script from `src/` puts `src/` on `sys.path`, which is how `from aria...` imports resolve. Tests add `src/` to the path themselves. There is no linter or build step.
+Run scripts from the repo root as `python src/<file>.py`. Running a script from `src/` puts `src/` on `sys.path`, which is how `from anxiety_detector...` imports resolve. Tests add `src/` to the path themselves. There is no linter or build step.
 
 ## Runtime dependencies
 

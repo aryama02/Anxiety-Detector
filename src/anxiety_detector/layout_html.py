@@ -35,7 +35,7 @@ def _nav_item(page: str, label: str, active: bool = False) -> str:
 
 SIDEBAR_HTML = f"""
 <nav class="aria-sidebar" aria-label="Primary navigation">
-  <button type="button" class="aria-wordmark" data-page="checkin" aria-label="Aria check-in">aria</button>
+  <button type="button" class="aria-wordmark" data-page="checkin" aria-label="Anxiety Detector check-in">Anxiety Detector</button>
   <div class="aria-nav-group">
     {_nav_item("checkin", "Check-in", active=True)}
     {_nav_item("about", "About")}
@@ -48,8 +48,8 @@ TOPBAR_HTML = """
 <style>
   html, body, gradio-app, .gradio-container, .main, .wrap.app, #app-shell {
     background-image:
-      linear-gradient(rgba(14, 16, 15, 0.45), rgba(14, 16, 15, 0.65)),
-      url('https://images.pexels.com/photos/8911301/pexels-photo-8911301.jpeg') !important;
+      linear-gradient(rgba(14, 16, 15, 0.05), rgba(14, 16, 15, 0.12)),
+      var(--hero-image) !important;
     background-size: cover !important;
     background-position: center center !important;
     background-repeat: no-repeat !important;
@@ -57,8 +57,8 @@ TOPBAR_HTML = """
   }
   #intake-screen, .aria-hero-copy {
     background-image:
-      linear-gradient(90deg, rgba(14, 16, 15, 0.55) 0%, rgba(14, 16, 15, 0.15) 50%, rgba(14, 16, 15, 0.55) 100%),
-      url('https://images.pexels.com/photos/8911301/pexels-photo-8911301.jpeg') !important;
+      linear-gradient(90deg, rgba(14, 16, 15, 0.08) 0%, rgba(14, 16, 15, 0.02) 50%, rgba(14, 16, 15, 0.08) 100%),
+      var(--hero-image) !important;
     background-size: cover !important;
     background-position: center center !important;
     background-repeat: no-repeat !important;

@@ -16,8 +16,8 @@
 /* Whole interface background with hero image */
 html, body, gradio-app, .gradio-container, .main, .wrap.app, #app-shell {
   background:
-    linear-gradient(rgba(14, 16, 15, 0.55), rgba(14, 16, 15, 0.70)),
-    url('https://images.pexels.com/photos/8911301/pexels-photo-8911301.jpeg') !important;
+    linear-gradient(rgba(14, 16, 15, 0.05), rgba(14, 16, 15, 0.12)),
+    var(--hero-image) !important;
   background-size: cover !important;
   background-position: center center !important;
   background-repeat: no-repeat !important;
@@ -64,7 +64,7 @@ footer { display: none !important; }
   z-index: 20;
   height: 64px;
   display: grid;
-  grid-template-columns: 160px 1fr auto;
+  grid-template-columns: 260px 1fr auto;
   align-items: center;
   padding: 8px 24px;
   border: 1px solid rgba(255, 255, 255, 0.18);
@@ -80,7 +80,7 @@ footer { display: none !important; }
   background: transparent;
   color: #FFFFFF !important;
   font-family: Georgia, "Instrument Serif", serif;
-  font-size: 32px;
+  font-size: 24px;
   line-height: 1;
   letter-spacing: -.03em;
   cursor: pointer;
@@ -140,8 +140,8 @@ footer { display: none !important; }
   border-radius: 24px;
   overflow: hidden;
   background:
-    linear-gradient(90deg, rgba(14,16,15,.60) 0%, rgba(14,16,15,.20) 50%, rgba(14,16,15,.60) 100%),
-    url('https://images.pexels.com/photos/8911301/pexels-photo-8911301.jpeg') !important;
+    linear-gradient(90deg, rgba(14,16,15,.08) 0%, rgba(14,16,15,.02) 50%, rgba(14,16,15,.08) 100%),
+    var(--hero-image) !important;
   background-size: cover !important;
   background-position: center center !important;
   padding: 44px 48px;
@@ -163,8 +163,8 @@ footer { display: none !important; }
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, rgba(14,16,15,.60) 0%, rgba(14,16,15,.20) 50%, rgba(14,16,15,.60) 100%),
-    url('https://images.pexels.com/photos/8911301/pexels-photo-8911301.jpeg') !important;
+    linear-gradient(90deg, rgba(14,16,15,.08) 0%, rgba(14,16,15,.02) 50%, rgba(14,16,15,.08) 100%),
+    var(--hero-image) !important;
   background-size: cover !important;
   background-position: center center !important;
 }
@@ -226,10 +226,10 @@ footer { display: none !important; }
   padding: 30px 32px 28px;
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 22px;
-  background: rgba(18, 20, 19, 0.82) !important;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.50);
+  background: rgba(18, 20, 19, 0.28) !important;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.28);
   gap: 14px;
   min-height: 0;
   overflow: visible !important;
@@ -483,6 +483,16 @@ footer { display: none !important; }
   color: #FFFFFF !important;
   margin: 0 0 4px !important;
 }
+.notice:empty {
+  display: none !important;
+  padding: 0 !important;
+  border: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+}
+#form-panel .notice {
+  display: none !important;
+}
 
 .aria-page-panel, #about-page, #credits-page {
   background: rgba(20, 22, 21, 0.85);
@@ -501,7 +511,7 @@ footer { display: none !important; }
 /* Responsive Adjustments */
 @media (max-width: 980px) {
   .gradio-container { padding: 12px !important; }
-  .aria-sidebar { grid-template-columns: 100px 1fr; height: auto; padding: 10px 16px; }
+  .aria-sidebar { grid-template-columns: 220px 1fr; height: auto; padding: 10px 16px; }
   .aria-test-pill { display: none; }
   #intake-screen {
     min-height: 720px;
@@ -547,8 +557,8 @@ footer { display: none !important; }
   .progress-step { font-size: 11px; }
 }
 @media (max-width: 680px) {
-  .aria-sidebar { grid-template-columns: 80px 1fr; border-radius: 14px; padding: 8px 12px; }
-  .aria-wordmark { font-size: 26px; padding: 4px 8px; }
+  .aria-sidebar { grid-template-columns: 180px 1fr; border-radius: 14px; padding: 8px 12px; }
+  .aria-wordmark { font-size: 20px; padding: 4px 8px; }
   .aria-nav-group { justify-content: flex-end; }
   .aria-nav-item { padding: 8px 10px; font-size: 13px; }
   #intake-screen { min-height: auto; height: auto; padding: 20px 16px; }
